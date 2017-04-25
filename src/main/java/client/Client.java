@@ -33,9 +33,12 @@ public class Client {
         SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
         try {
             socket = (SSLSocket) socketFactory.createSocket(host, port);
+            socket.setEnabledCipherSuites(new String[] {"TLS_DH_anon_WITH_AES_128_GCM_SHA256"});
 
-            inputStream = new ObjectInputStream(socket.getInputStream());
+            System.out.println("Connected");
+
             outputStream = new ObjectOutputStream(socket.getOutputStream());
+            inputStream = new ObjectInputStream(socket.getInputStream());
 
             while (true) {
                 Serializable message = (Serializable) inputStream.readObject();

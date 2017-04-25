@@ -30,6 +30,8 @@ public class Server {
             SSLServerSocketFactory socketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
             serverSocket = (SSLServerSocket) socketFactory.createServerSocket(port);
 
+            serverSocket.setEnabledCipherSuites(new String[] {"TLS_DH_anon_WITH_AES_128_GCM_SHA256"});
+
             handleConnections();
 
         } catch (IOException e) {
@@ -44,15 +46,17 @@ public class Server {
 
     private void handleConnections() {
         System.out.println("Listening for connections...");
-        try {
-            SSLSocket socket = (SSLSocket) serverSocket.accept();
-            ServerConnection connection = new ServerConnection(socket, this);
-            connection.start();
+        while (true) {
+            try {
+                SSLSocket socket = (SSLSocket) serverSocket.accept();
+                ServerConnection connection = new ServerConnection(socket, this);
+                connection.start();
 
-            connections.add(connection);
+                connections.add(connection);
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

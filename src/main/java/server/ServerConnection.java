@@ -18,12 +18,14 @@ public class ServerConnection extends Thread {
     private LinkedBlockingQueue<Serializable> messageQueue = new LinkedBlockingQueue<>();
 
     public ServerConnection(SSLSocket socket, Server server) {
+        //socket.setEnabledCipherSuites(new String[] {"TLS_DH_anon_WITH_AES_128_GCM_SHA256"});
+
         this.socket = socket;
         this.server = server;
 
         try {
-            inputStream = new ObjectInputStream(socket.getInputStream());
             outputStream = new ObjectOutputStream(socket.getOutputStream());
+            inputStream = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,7 +33,7 @@ public class ServerConnection extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Connection");
+        System.out.println("New client connected...");
         try {
             while (true) {
                 Serializable message = (Serializable) inputStream.readObject();
