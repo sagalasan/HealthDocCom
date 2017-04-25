@@ -18,7 +18,6 @@ public class ServerConnection extends Thread {
     private LinkedBlockingQueue<Serializable> messageQueue = new LinkedBlockingQueue<>();
 
     public ServerConnection(SSLSocket socket, Server server) {
-        //socket.setEnabledCipherSuites(new String[] {"TLS_DH_anon_WITH_AES_128_GCM_SHA256"});
 
         this.socket = socket;
         this.server = server;
