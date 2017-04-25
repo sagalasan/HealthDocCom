@@ -1,5 +1,8 @@
 package client;
 
+import messages.ClientHello;
+import messages.ServerHello;
+
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
@@ -53,10 +56,25 @@ public class Client {
         while (true) {
             try {
                 Serializable message = messageQueue.take();
-                System.out.println(message);
+                processMessage(message);
             } catch (InterruptedException e) {
                 return;
             }
+        }
+    }
+
+    private void processMessage(Serializable message) {
+        if (message instanceof ServerHello) {
+            System.out.println("Received ServerHello");
+            send(new ClientHello());
+        }
+    }
+
+    private synchronized void send(Serializable message) {
+        try {
+            outputStream.writeObject(message);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

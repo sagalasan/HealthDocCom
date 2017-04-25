@@ -1,5 +1,7 @@
 package server;
 
+import messages.ClientHello;
+
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
@@ -64,15 +66,21 @@ public class Server {
     private void handleMessages() {
         while (true) {
             try {
-                System.out.println("hi");
                 MessagePair messagePair = messageQueue.take();
                 Serializable message = messagePair.message;
                 ServerConnection connection = messagePair.client;
 
-                // TODO: Actuall process messages
+                processMessage(connection, message);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void processMessage(ServerConnection connection, Serializable message) {
+        // Connection reference will be used to respond to the right client
+        if (message instanceof ClientHello) {
+            System.out.println("Received ClientHello");
         }
     }
 

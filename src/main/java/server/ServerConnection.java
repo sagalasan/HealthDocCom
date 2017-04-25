@@ -1,5 +1,7 @@
 package server;
 
+import messages.ServerHello;
+
 import javax.net.ssl.SSLSocket;
 import java.io.*;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -33,6 +35,8 @@ public class ServerConnection extends Thread {
     public void run() {
         System.out.println("New client connected...");
         try {
+            send(new ServerHello());
+
             while (true) {
                 Serializable message = (Serializable) inputStream.readObject();
                 server.addMessage(this, message);
