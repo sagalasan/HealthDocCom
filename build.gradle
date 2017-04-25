@@ -6,6 +6,29 @@ apply plugin: 'java'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version,
+                'Main-Class': 'com.github.sagalasan.healthdoc.HealthDocCom'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task server(type: JavaExec) {
+    main = "server.Server"
+    classpath = sourceSets.main.runtimeClasspath
+    args = ["8443"]
+}
+
+task client(type: JavaExec) {
+    main = "client.Client"
+    classpath = sourceSets.main.runtimeClasspath
+    args = ["localhost", "8443"]
+}
+
 repositories {
     mavenCentral()
 }
