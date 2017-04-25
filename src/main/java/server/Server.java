@@ -26,6 +26,9 @@ public class Server {
         this.port = port;
     }
 
+    /**
+     * Method used to create the socket and listen for connections.
+     */
     public void start() {
         new Thread(this::handleMessages).start();
         try {
@@ -42,6 +45,11 @@ public class Server {
         }
     }
 
+    /**
+     * ServerConnections will call this method in order for a message to processed
+     * @param connection Reference to the ServerConnection that received the message
+     * @param message The message that was received
+     */
     public void addMessage(ServerConnection connection, Serializable message) {
         messageQueue.add(new MessagePair(message, connection));
     }
