@@ -29,6 +29,9 @@ public class Client {
         this.port = port;
     }
 
+    /**
+     * Method used to create the socket and get the input and output streams.
+     */
     public void start() {
         new Thread(this::handleMessages).start();
 
@@ -52,6 +55,18 @@ public class Client {
         }
     }
 
+    /**
+     * Call this method whenever a message needs to be sent to the server.
+     * @param message The message that will be sent.
+     */
+    public synchronized void send(Serializable message) {
+        try {
+            outputStream.writeObject(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void handleMessages() {
         while (true) {
             try {
@@ -67,14 +82,6 @@ public class Client {
         if (message instanceof ServerHello) {
             System.out.println("Received ServerHello");
             send(new ClientHello());
-        }
-    }
-
-    private synchronized void send(Serializable message) {
-        try {
-            outputStream.writeObject(message);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
